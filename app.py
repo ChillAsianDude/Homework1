@@ -7,7 +7,7 @@ api = "AIzaSyA85Gy2EW9b67GHgnWih9J_M33_WXtw3-c"
 genai.configure(api_key=api)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Templates')
 
 @app.route("/ai_agent", methods=["GET", "POST"])
 def ai_agent():
