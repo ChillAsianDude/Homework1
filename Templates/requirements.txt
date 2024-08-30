@@ -1,3 +1,0 @@
-flask
-gunicorn
-pip install -q -U google-generativeai
