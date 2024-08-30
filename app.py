@@ -3,7 +3,7 @@ import google.generativeai as genai
 import os
 import re
 
-api = "AIzaSyA85Gy2EW9b67GHgnWih9J_M33_WXtw3-c"
+api = os.environ.get("API_KEY")
 genai.configure(api_key=api)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
@@ -16,14 +16,16 @@ def ai_agent():
 @app.route("/ai_agent_reply", methods=["GET", "POST"])
 def ai_agent_reply():
     q = request.form.get("q")  
-    response = model.generate_content(q)
-    r = response.candidates[0].content.parts[0].text
+    try:
+        response = model.generate_content(q)
+        r = response.candidates[0].content.parts[0].text
+    except Exception as e:
+        r = f"Error: {str(e)}"
 
     formatted_response = re.sub(r'<[^>]*>', '', r) 
     formatted_response = re.sub(r'\*\*', '', formatted_response) 
     formatted_response = re.sub(r'\*', '', formatted_response)  
     
-    # Present it as a plain text paragraph
     formatted_response = formatted_response.replace('\n', ' ')  
 
     return render_template("ai_agent_reply.html", r=formatted_response)
@@ -43,8 +45,11 @@ def joke_reply():
     else:
         q = "Tell me a random joke."
     
-    response = model.generate_content(q)
-    r = response.candidates[0].content.parts[0].text
+    try:
+        response = model.generate_content(q)
+        r = response.candidates[0].content.parts[0].text
+    except Exception as e:
+        r = f"Error: {str(e)}"
 
     formatted_response = re.sub(r'<[^>]*>', '', r)  
     formatted_response = re.sub(r'\*\*', '', formatted_response)  
@@ -59,4 +64,4 @@ def index():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
