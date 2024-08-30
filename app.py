@@ -22,8 +22,6 @@ def ai_agent_reply():
     formatted_response = re.sub(r'<[^>]*>', '', r) 
     formatted_response = re.sub(r'\*\*', '', formatted_response) 
     formatted_response = re.sub(r'\*', '', formatted_response)  
-    
-    # Present it as a plain text paragraph
     formatted_response = formatted_response.replace('\n', ' ')  
 
     return render_template("ai_agent_reply.html", r=formatted_response)
@@ -32,7 +30,7 @@ def ai_agent_reply():
 def joke():
     return render_template("joke.html")
 
-@app.route("/joke_reply", methods=["POST"])
+@app.route("/joke_reply", methods=["GET", "POST"])
 def joke_reply():
     joke_type = request.form.get("joke_type")
     
